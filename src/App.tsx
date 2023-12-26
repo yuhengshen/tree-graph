@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import mockData from "./graph/mockData";
 import { DrawGraph } from "./graph/DrawGraph";
 import { createCard } from "./graph/card";
 
 function App() {
   const container = useRef(null);
-  const [instance, setInstance] = useState<DrawGraph>();
+  const instanceRef = useRef<DrawGraph>(null);
 
   useEffect(() => {
     const instance = new DrawGraph(
@@ -23,9 +23,9 @@ function App() {
         },
         createCard,
         // start or center
-        align: 'start',
+        align: "start",
         // LR or TB
-        dir: 'LR',
+        dir: "LR",
         events: {
           "click:star": (node) => {
             const { name } = node;
@@ -33,9 +33,9 @@ function App() {
           },
         },
       },
-      structuredClone(mockData)
+      structuredClone(mockData),
     ).draw();
-    setInstance(instance);
+    instanceRef.current = instance;
     return () => {
       instance.destroy();
     };
@@ -48,7 +48,7 @@ function App() {
           onInput={(e) => {
             // @ts-ignore
             const v = e.target.value;
-            instance?.setAlign(v as any);
+            instanceRef.current?.setAlign(v as any);
           }}
         >
           <option value="start">start</option>
